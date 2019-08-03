@@ -25,7 +25,8 @@ conda create -y -n jupyterhub -c defaults -c conda-forge \
 	ipyleaflet \
 	nbdime \
 	rise \
-	git
+	git \
+	notebook=5.7.8
 
 # Create environment for running Data Science projects
 conda create -y -n anac_${ANACONDA_VERSION} -c defaults -c conda-forge \
