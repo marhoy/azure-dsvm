@@ -35,6 +35,7 @@ conda create -y -n anac_${ANACONDA_VERSION} -c defaults -c conda-forge \
 	tensorflow-gpu \
 	lightgbm \
 	xgboost \
+	catboost \
 	plotly \
 	dash \
 	ipyleaflet \
