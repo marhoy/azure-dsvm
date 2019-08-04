@@ -42,6 +42,8 @@ conda create -y -n anac_${ANACONDA_VERSION} -c defaults -c conda-forge \
 	gmaps \
 	tqdm \
 	conda-build \
+	conda-verify \
+	ripgrep \
 	setuptools_scm \
 	pypandoc \
 	docopt \
