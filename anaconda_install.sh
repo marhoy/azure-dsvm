@@ -60,7 +60,7 @@ conda create -y -n anac_${ANACONDA_VERSION} -c defaults -c conda-forge \
 # Add the kernel from the above environment to the Jupyter list
 echo "Adding new kernel to JupyterHub"
 KERNEL_DIR=${INSTALL_PATH}/envs/anac_${ANACONDA_VERSION}/share/jupyter/kernels/python3
-TMP_KERNEL=`mktemp`
+TMP_KERNEL=${KERNEL_DIR}/kernel.json.new
 jq --arg name "Anaconda ${ANACONDA_VERSION}" '
         .display_name |= $name
 ' ${KERNEL_DIR}/kernel.json > ${TMP_KERNEL} && mv ${TMP_KERNEL} ${KERNEL_DIR}/kernel.json
