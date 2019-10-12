@@ -4,20 +4,19 @@ Setting up an Azure Data Science Virtual Machine
 # Creating SSL certificate for Jupyterhub
 
 ## Set up a web server on port 80
+
+We need a webserver to serve the acme-challenge, e.g. nginx.
+
 1. Enable and start nginx:
 ```bash
 sudo systemctl enable nginx && sudo systemctl start nginx
 ```
 
-2. In the Azure-portal, add an incoming firewall rule for port 80
+2. In the Azure-portal, add a firewall rule to allow incoming TCP-requests on port 80
 
-3. Add yourself to the ```www-data``` group:
-```bash
-sudo usermod -aG www-data $USER
-```
-Log out and in to activate the group change.
+3. Create a directory for the acme-challenge:
+By default, the ngingx webroot is at ```/usr/share/nginx/html```. Create a directory for the acme-challenge inside the webroot, and make it writable for the www-data user.
 
-4. Create a directory for the acme-challenge':
 ```bash
 sudo mkdir -p /usr/share/nginx/html/.well-known/acme-challenge
 sudo chmod 775 /usr/share/nginx/html/.well-known/acme-challenge
@@ -37,7 +36,8 @@ Log out and in to activate the group change
 docker pull zerossl/client
 ```
 
-3. Create an alias for running the ZeroSSL client:
+3. Create an alias for running the ZeroSSL client from the docker image:
+Note that we map ```/webroot``` to the directory we created above, and ```/data``` to the directory where JupyterHub expects to find the certificates: ```/etc/jupyterhub/srv```
 ```bash
 alias le.pl='docker run -it -v /etc/jupyterhub/srv:/data -v /usr/share/nginx/html/.well-known/acme-challenge:/webroot -u $(id -u www-data) --rm zerossl/client'
 ```
@@ -45,11 +45,7 @@ alias le.pl='docker run -it -v /etc/jupyterhub/srv:/data -v /usr/share/nginx/htm
 
 ## Create new SSL certificates
 
-1. Back up the existing certificate
-
-```bash
-le.pl --key account.key --email "martin.hoy@dnvgl.com" --csr domain.csr --csr-key domain.key --crt domain.crt --domains "nautilus.northeurope.cloudapp.azure.com" --generate-missing --path /webroot --unlink --api 2
-```
+1. Back up the existing certificate in ```/etc/jupyterhub/srv```
 
 2. Make the certificate directory writable for the www-data user:
 ```bash
@@ -60,3 +56,11 @@ sudo chown www-data /etc/jupyterhub/srv
 ```bash
 le.pl --key account.key --email "martin.hoy@dnvgl.com" --csr domain.csr --csr-key server.key --crt server.crt --domains "nautilus.northeurope.cloudapp.azure.com" --generate-missing --path /webroot --unlink --api 2 --live
 ```
+
+## Restart the JupyterHub server
+
+```bash
+sudo systemctl restart jupyterhub
+```
+
+
