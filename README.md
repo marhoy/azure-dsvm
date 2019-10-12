@@ -15,7 +15,7 @@ sudo systemctl enable nginx && sudo systemctl start nginx
 2. In the Azure-portal, add a firewall rule to allow incoming TCP-requests on port 80
 
 3. Create a directory for the acme-challenge:
-By default, the ngingx webroot is at ```/usr/share/nginx/html```. Create a directory for the acme-challenge inside the webroot, and make it writable for the www-data user.
+By default, the ngingx webroot is at ```/usr/share/nginx/html```. Create a directory for the acme-challenge inside the webroot. We will run the ZeroSSL client as the www-data user, so we need to make the acme-challenge directory writable for the ```www-data``` user.
 
 ```bash
 sudo mkdir -p /usr/share/nginx/html/.well-known/acme-challenge
@@ -37,7 +37,7 @@ docker pull zerossl/client
 ```
 
 3. Create an alias for running the ZeroSSL client from the docker image:
-Note that we map ```/webroot``` to the directory we created above, and ```/data``` to the directory where JupyterHub expects to find the certificates: ```/etc/jupyterhub/srv```
+Note that we map ```/webroot``` to the directory we created above, and ```/data``` to the directory where JupyterHub expects to find the certificates: ```/etc/jupyterhub/srv```. We also specify that the client shall run as the ```www-data``` user.
 ```bash
 alias le.pl='docker run -it -v /etc/jupyterhub/srv:/data -v /usr/share/nginx/html/.well-known/acme-challenge:/webroot -u $(id -u www-data) --rm zerossl/client'
 ```
@@ -54,7 +54,7 @@ sudo chown www-data /etc/jupyterhub/srv
 
 3. Use the client to generate a certificate:
 ```bash
-le.pl --key account.key --email "martin.hoy@dnvgl.com" --csr domain.csr --csr-key server.key --crt server.crt --domains "nautilus.northeurope.cloudapp.azure.com" --generate-missing --path /webroot --unlink --api 2 --live
+le.pl --key account.key --csr domain.csr --csr-key server.key --crt server.crt --domains "nautilus.northeurope.cloudapp.azure.com" --generate-missing --path /webroot --unlink --api 2 --live
 ```
 
 ## Restart the JupyterHub server
@@ -63,4 +63,8 @@ le.pl --key account.key --email "martin.hoy@dnvgl.com" --csr domain.csr --csr-ke
 sudo systemctl restart jupyterhub
 ```
 
-
+## Create a cronjob to renew the certificate every month
+```bash
+crontab -l
+0 0 1 * * docker run -it -v /etc/jupyterhub/srv:/data -v /usr/share/nginx/html/.well-known/acme-challenge:/webroot -u $(id -u www-data) --rm zerossl/client --key account.key --csr domain.csr --csr-key server.key --crt server.crt --domains "nautilus.northeurope.cloudapp.azure.com" --generate-missing --path /webroot --unlink --api 2 --live --quiet
+```
