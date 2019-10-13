@@ -16,11 +16,15 @@ Use/run the script [anaconda_install.sh](anaconda_install.sh) to:
 
 ## Replace the preinstalled JupyterHub
 Use/run the script [change_jupyterhub.sh](change_jupyterhub.sh) to:
-1. Change the systemd unit file for jupyterhub, so it starts our newly installed server
+1. Replace the systemd unit file for jupyterhub, so it starts our newly installed server
 1. Copy standard configuration files to ```/etc/jupyterhub```
+
+NOTE: After a major upgrade of jupyterhub, it is sometimes necessary to do ```jupyterhub upgrade-db```. The output of jupyterhub is logged to syslog, use ```journalctl -fu jupyterhub``` to see output.
+
 
 ## Create an SSL certificate for JupyterHub
 If you want to set up an [SSL certificate for the JupyterHub server, see this description](jupyterhub_SSL_certificate.md).
+
 
 ## Build and install aic-packages
 Use/run the script [build_install_aictools.sh](build_install_aictools.sh) to build and install conda-packages of the aictools.
