@@ -1,4 +1,4 @@
-# Creating SSL certificate for Jupyterhub
+# Creating an SSL certificate for Jupyterhub
 
 
 ## Set up a web server on port 80
@@ -22,7 +22,7 @@ sudo chown www-data.www-data /usr/share/nginx/html/.well-known/acme-challenge
 ```
 
 
-## Download ZeroSSL client
+## Download the ZeroSSL client
 1. Add yourself to the docker group:
 ```bash
 sudo usermod -aG docker $USER
@@ -41,7 +41,7 @@ alias le.pl='docker run -it -v /etc/jupyterhub/srv:/data -v /usr/share/nginx/htm
 ```
 
 
-## Create new SSL certificates
+## Manually create the SSL certificate
 
 1. Back up the existing certificate in ```/etc/jupyterhub/srv```
 
@@ -68,7 +68,7 @@ sudo systemctl restart jupyterhub
 ## Create a cronjob that automatically renews the certificate
 The certificate is valid for 90 days. Let's create a cronjob that runs every 7 days (at 0200 on Sundays) and renews the certificate when there is 10 or fewer days left until it expires.
 If/when the certificate is renewed (command exits with value 42), we also restart the JupyterHub server to load the new certificate.
-NOTE: This has the side-effect of shutting down all running notebooks.
+NOTE: This has the side-effect of shutting down all running notebooks. AFAIK there is no way to make jupyterhub reload the certificate without stopping/starting it (it should e.g. be possible to send a SIGHUP).
 
 ```bash
 crontab -l
