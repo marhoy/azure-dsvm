@@ -27,7 +27,7 @@ conda create -y -n jupyterhub -c defaults -c conda-forge \
 	nbdime \
 	rise \
 	git \
-	notebook=5.7.8
+	notebook
 
 # Create environment for running Data Science projects
 conda create -y -n ${VIRTUALENV_NAME} -c defaults -c conda-forge \
