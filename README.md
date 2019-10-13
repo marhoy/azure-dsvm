@@ -8,13 +8,13 @@ These are things you might want to do after spinning up a fresh DSVM:
 sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade
 ```
 
-## Installing Miniconda, JupyterHub and Anaconda
+## Install your own Miniconda, JupyterHub and Anaconda
 Use/run the script [anaconda_install.sh](anaconda_install.sh) to:
 1. Download and install the latest version of Miniconda
 1. Create a conda environment for running JupyterHub
 1. Create a conda environment with the latest version of Anaconda plus some additional packages that are useful
 
-## Replace the JupyterHub that comes preinstalled
+## Replace the preinstalled JupyterHub
 Use/run the script [change_jupyterhub.sh](change_jupyterhub.sh) to:
 1. Change the systemd unit file for jupyterhub, so it starts our newly installed server
 1. Copy standard configuration files to ```/etc/jupyterhub```
