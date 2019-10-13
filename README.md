@@ -23,7 +23,7 @@ NOTE: After a major upgrade of jupyterhub, it is sometimes necessary to do ```ju
 
 
 ## Create an SSL certificate for JupyterHub
-If you want to set up an [SSL certificate for the JupyterHub server, see this description](jupyterhub_SSL_certificate.md).
+If you want to set up an [SSL certificate for the JupyterHub server, see this description](SSL_certificate_jupyterhub.md).
 
 
 ## Build and install aic-packages
