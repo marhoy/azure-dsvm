@@ -1,0 +1,14 @@
+[Unit]
+Description=Jupyterhub
+After=network-online.target sshd.service
+
+[Service]
+User=root
+ExecStart=/data/miniconda/envs/jupyterhub/bin/jupyterhub
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=jupyterhub
+WorkingDirectory=/etc/jupyterhub
+
+[Install]
+WantedBy=multi-user.target
