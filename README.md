@@ -1,5 +1,12 @@
 # azure-dsvm
-Setting up an Azure Data Science Virtual Machine
+Setting up an Azure Data Science Virtual Machine.
+
+These are thing you might want to do after spinning up a fresh DSVM:
+
+## Upgrade all system packages to latest versions:
+```bash
+sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade
+```
 
 ## Installing Miniconda, JupyterHub and Anaconda
 Use/run the script [anaconda_install.sh](anaconda_install.sh) to:
