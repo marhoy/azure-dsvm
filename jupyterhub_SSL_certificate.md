@@ -3,7 +3,7 @@
 
 ## Set up a web server on port 80
 
-We need a webserver to serve the acme-challenge, e.g. nginx.
+We need a webserver accessible on port 80 in order to serve the acme-challenge. Let's use nginx:
 
 1. Enable and start nginx:
 ```bash
@@ -13,7 +13,7 @@ sudo systemctl enable nginx && sudo systemctl start nginx
 2. In the Azure-portal, add a firewall rule to allow incoming TCP-requests on port 80
 
 3. Create a directory for the acme-challenge:
-By default, the ngingx webroot is at ```/usr/share/nginx/html```. Create a directory for the acme-challenge inside the webroot. We will run the ZeroSSL client as the www-data user, so we need to make the acme-challenge directory writable for the ```www-data``` user.
+By default, the ngingx webroot is at ```/usr/share/nginx/html```. Create a directory for the acme-challenge inside the webroot. We will run the ZeroSSL client as the ```www-data``` user, so we need to make the acme-challenge directory writable for the ```www-data``` user.
 
 ```bash
 sudo mkdir -p /usr/share/nginx/html/.well-known/acme-challenge
@@ -66,8 +66,11 @@ sudo systemctl restart jupyterhub
 
 
 ## Create a cronjob that automatically renews the certificate
+
 The certificate is valid for 90 days. Let's create a cronjob that runs every 7 days (at 0200 on Sundays) and renews the certificate when there is 10 or fewer days left until it expires.
-If/when the certificate is renewed (command exits with value 42), we also restart the JupyterHub server to load the new certificate.
+
+If/when the certificate is renewed (the command exits with value 42), we also restart the JupyterHub server to load the new certificate.
+
 NOTE: This has the side-effect of shutting down all running notebooks. AFAIK there is no way to make jupyterhub reload the certificate without stopping/starting it (it should e.g. be possible to send a SIGHUP).
 
 ```bash
