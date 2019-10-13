@@ -1,7 +1,7 @@
 # azure-dsvm
 Setting up an Azure Data Science Virtual Machine.
 
-These are thing you might want to do after spinning up a fresh DSVM:
+These are things you might want to do after spinning up a fresh DSVM:
 
 ## Upgrade all system packages to latest versions:
 ```bash
