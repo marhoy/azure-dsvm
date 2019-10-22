@@ -54,7 +54,8 @@ sudo chown www-data /etc/jupyterhub/srv
 NOTE: Until you're sure everything works, omit the ```--live``` option at the end. This will create a dummy-certificate. Add it back when things look good and you want to create a proper certificate.
 
 ```bash
-le.pl --key account.key --csr domain.csr --csr-key server.key --crt server.crt --domains "nautilus.northeurope.cloudapp.azure.com" --generate-missing --path /webroot --unlink --api 2 --live
+export DOMAINS="nautilus.northeurope.cloudapp.azure.com"
+le.pl --key account.key --csr domain.csr --csr-key server.key --crt server.crt --domains $DOMAINS --generate-missing --path /webroot --unlink --api 2 --live
 ```
 
 4. Restart the JupyterHub server
@@ -67,7 +68,7 @@ sudo systemctl restart jupyterhub
 
 ## Create a cronjob that automatically renews the certificate
 
-The certificate is valid for 90 days. Let's create a cronjob that runs every 7 days (at 0200 on Sundays) and renews the certificate when there is 10 or fewer days left until it expires.
+The certificate is valid for 90 days. Let's create a cronjob that runs every day at 0200 and renews the certificate when there is 10 or fewer days left until it expires. If there is more than 10 days left, nothing happpens.
 
 If/when the certificate is renewed (the command exits with value 42), we also restart the JupyterHub server to load the new certificate.
 
@@ -75,5 +76,5 @@ NOTE: This has the side-effect of shutting down all running notebooks. AFAIK the
 
 ```bash
 crontab -l
-0 2 * * 0 docker run -it -v /etc/jupyterhub/srv:/data -v /usr/share/nginx/html/.well-known/acme-challenge:/webroot -u $(id -u www-data) --rm zerossl/client --key account.key --csr domain.csr --csr-key server.key --crt server.crt --domains "nautilus.northeurope.cloudapp.azure.com" --generate-missing --path /webroot --unlink --api 2 --live --renew 10 --issue-code 42 --quiet ; if [ $? -eq 42 ]; then sudo systemctl restart jupyterhub; fi
+0 2 * * * docker run -it -v /etc/jupyterhub/srv:/data -v /usr/share/nginx/html/.well-known/acme-challenge:/webroot -u $(id -u www-data) --rm zerossl/client --key account.key --csr domain.csr --csr-key server.key --crt server.crt --domains "nautilus.northeurope.cloudapp.azure.com" --generate-missing --path /webroot --unlink --api 2 --live --renew 10 --issue-code 42 --quiet ; if [ $? -eq 42 ]; then sudo systemctl restart jupyterhub; fi
 ```
