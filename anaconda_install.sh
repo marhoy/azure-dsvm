@@ -4,6 +4,11 @@ export INSTALL_PATH=/data/miniconda
 export ANACONDA_VERSION=2019.10
 export VIRTUALENV_NAME=anac_${ANACONDA_VERSION}
 
+# Create INSTALL_PATH if needed
+sudo mkdir -p $INSTALL_PATH
+sudo chown root.sudo $INSTALL_PATH
+sudo chmod 2775 $INSTALL_PATH
+
 # Download and install the latest version of Miniconda
 curl -o Miniconda.sh -L https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 bash Miniconda.sh -b -f -p $INSTALL_PATH
@@ -12,7 +17,7 @@ rm Miniconda.sh
 # Activate base environment and update conda
 source ${INSTALL_PATH}/etc/profile.d/conda.sh
 conda activate base
-conda update -y conda
+conda update -y --all
 
 # Update global conda.sh
 sudo ln -sf ${INSTALL_PATH}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
