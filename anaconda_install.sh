@@ -1,8 +1,8 @@
 #!/bin/bash
 
-INSTALL_PATH=/data/miniconda
-ANACONDA_VERSION=2019.07
-VIRTUALENV_NAME=anac_${ANACONDA_VERSION}
+export INSTALL_PATH=/data/miniconda
+export ANACONDA_VERSION=2019.10
+export VIRTUALENV_NAME=anac_${ANACONDA_VERSION}
 
 # Download and install the latest version of Miniconda
 curl -o Miniconda.sh -L https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -63,13 +63,11 @@ conda create -y -n ${VIRTUALENV_NAME} -c defaults -c conda-forge \
 
 # Add the kernel from the above environment to the Jupyter list
 echo "Adding new kernel to JupyterHub"
-KERNEL_DIR=${INSTALL_PATH}/envs/${VIRTUALENV_NAME}/share/jupyter/kernels/python3
-TMP_KERNEL=${KERNEL_DIR}/kernel.json.new
+export KERNEL_DIR=${INSTALL_PATH}/envs/${VIRTUALENV_NAME}/share/jupyter/kernels/python3
+export TMP_KERNEL=${KERNEL_DIR}/kernel.json.new
 jq --arg name "Anaconda ${ANACONDA_VERSION}" '
         .display_name |= $name
 ' ${KERNEL_DIR}/kernel.json > ${TMP_KERNEL} && mv ${TMP_KERNEL} ${KERNEL_DIR}/kernel.json
 
 conda activate jupyterhub
 jupyter-kernelspec install ${KERNEL_DIR} --name "${VIRTUALENV_NAME}" --prefix ${INSTALL_PATH}/envs/jupyterhub/
-
-
