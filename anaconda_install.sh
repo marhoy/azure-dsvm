@@ -37,8 +37,8 @@ conda create -y -n jupyterhub -c defaults -c conda-forge \
 # Create environment for running Data Science projects
 conda create -y -n ${VIRTUALENV_NAME} -c defaults -c conda-forge \
 	anaconda=${ANACONDA_VERSION} \
-	keras \
 	tensorflow-gpu \
+	pydot \
 	lightgbm \
 	xgboost \
 	catboost \
@@ -47,7 +47,6 @@ conda create -y -n ${VIRTUALENV_NAME} -c defaults -c conda-forge \
 	ipyleaflet \
 	folium \
 	gmaps \
-	tqdm \
 	conda-build \
 	conda-verify \
 	ripgrep \
