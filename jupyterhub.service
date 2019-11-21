@@ -4,6 +4,7 @@ After=network-online.target sshd.service
 
 [Service]
 User=root
+Environment=PATH=/data/miniconda/envs/jupyterhub/bin:/data/miniconda/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ExecStart=/data/miniconda/envs/jupyterhub/bin/jupyterhub
 StandardOutput=syslog
 StandardError=syslog
